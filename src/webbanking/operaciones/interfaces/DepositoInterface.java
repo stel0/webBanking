@@ -10,5 +10,6 @@ package webbanking.operaciones.interfaces;
  */
 public interface DepositoInterface {
     Boolean depositar();
-    Boolean validarPinCuenta();
+    /* NO ES NECESARIO
+    Boolean validarPinCuenta();*/
 }
