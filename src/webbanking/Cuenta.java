@@ -10,11 +10,23 @@ package webbanking;
  * @author sotelo
  */
 public class Cuenta {
+    private String Titular;
     private String tipoCuenta;
-    private Double saldo;
+    private double  ID;// le agrege porque tiene que ser uno d elos atributos de la cuenta
+    private double saldo;// modifique a double para que pueda usar el constructor porque si esta en Double no se puede modificar
     private String estadoCuenta;
     private Integer pinCuenta;
     private Integer pinTransaccion;
+    
+    public Cuenta(String titular,String tipoCuenta,double  Id,double  saldo,String Estado,Integer pincuenta,Integer pintransaccion){
+        this.Titular=titular;
+        this.tipoCuenta = tipoCuenta;
+        this.ID=Id;
+        this.saldo = saldo;
+        this.estadoCuenta=Estado;
+        this.pinCuenta= pincuenta;
+        this.pinTransaccion=pintransaccion;
+    }
 
     public String getTipoCuenta() {
         return tipoCuenta;
