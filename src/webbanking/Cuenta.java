@@ -12,22 +12,29 @@ package webbanking;
 public class Cuenta {
     private String Titular;
     private String tipoCuenta;
-    private double  ID;// le agrege porque tiene que ser uno d elos atributos de la cuenta
+    private double  IDcuenta;// le agrege porque tiene que ser uno d elos atributos de la cuenta
     private double saldo;// modifique a double para que pueda usar el constructor porque si esta en Double no se puede modificar
     private String estadoCuenta;
     private Integer pinCuenta;
     private Integer pinTransaccion;
     
-    public Cuenta(String titular,String tipoCuenta,double  Id,double  saldo,String Estado,Integer pincuenta,Integer pintransaccion){
-        this.Titular=titular;
+    public Cuenta(String titular, String tipoCuenta, double Id, double saldo, String Estado, Integer pincuenta, Integer pintransaccion) {
+        this.Titular = titular;
         this.tipoCuenta = tipoCuenta;
-        this.ID=Id;
+        this.IDcuenta = Id;
         this.saldo = saldo;
-        this.estadoCuenta=Estado;
-        this.pinCuenta= pincuenta;
-        this.pinTransaccion=pintransaccion;
+        this.estadoCuenta = Estado;
+        this.pinCuenta = pincuenta;
+        this.pinTransaccion = pintransaccion;
     }
-
+    public String gettitular(){
+        return this.Titular;
+    }
+    
+    public double getIDcuenta(){
+        return this.IDcuenta;
+    }
+    
     public String getTipoCuenta() {
         return tipoCuenta;
     }
@@ -60,6 +67,8 @@ public class Cuenta {
     public Integer getPinTransaccion() {
         return pinTransaccion;
     }
+    public void aumentarSaldo(double dep){
+        this.saldo=this.saldo + dep;
+    }
 
-    
 }
