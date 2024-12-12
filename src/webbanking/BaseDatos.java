@@ -20,9 +20,9 @@ public class BaseDatos {
     ArrayList<Cuenta> cuentas = new ArrayList<>();
     
     public BaseDatos() {
-        cuentas.add(new Cuenta("Alex", "Corriente", 6546548, 3000000, "Activa", 1324, 2222));
-        cuentas.add(new Cuenta("Bruno", "Ahorro", 6546549, 2000000, "Activa", 4321, 1111));
-        cuentas.add(new Cuenta("Carla", "Corriente", 6546550, 1500000, "Inactiva", 5678, 3333));
+        cuentas.add(new Cuenta("Alex@gmail.com","Alex", "Corriente", 6546548, 3000000, "Activa", 1324, 2222));
+        cuentas.add(new Cuenta("Bruno@gmail.com","Bruno", "Ahorro", 6546549, 2000000, "Activa", 4321, 1111));
+        cuentas.add(new Cuenta("Carla@gmail.com", "Carla","Corriente", 6546550, 1500000, "Inactiva", 5678, 3333));
     }
     
     
@@ -35,6 +35,27 @@ public class BaseDatos {
         }   
         return null; 
     }
+    //INICIO SESION
+    //Para verificar el pin de cuenta y el correo en el inicio de sesion
+   public Boolean validarInicio(Integer Pin, String correo) {
+    for (Cuenta cuenta : cuentas) {
+        if (cuenta.getPinCuenta().equals(Pin) && cuenta.getcorreo().equalsIgnoreCase(correo)) {
+            return true;
+        }
+    }
+    return false;
+    }
+    
+    public Cuenta getCuenta(Integer Pin,String correo){
+        for(Cuenta cuenta : cuentas){
+            if (cuenta.getPinCuenta().equals(Pin) && cuenta.getcorreo().equalsIgnoreCase(correo) ){
+                return cuenta;
+            }
+        }   
+        return null;
+    }
+    
+    
     
     //DEPOSITO CUENTA//
     
@@ -75,5 +96,6 @@ public class BaseDatos {
         CDestino.aumentarSaldo(Monto);
         Remitente.desminuirSaldo(Monto);
     }
+
     
 }

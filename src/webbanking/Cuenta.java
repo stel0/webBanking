@@ -10,6 +10,7 @@ package webbanking;
  * @author sotelo
  */
 public class Cuenta {
+    private String correo;
     private String Titular;
     private String tipoCuenta;
     private long  IDcuenta;// le agrege porque tiene que ser uno d elos atributos de la cuenta
@@ -18,7 +19,8 @@ public class Cuenta {
     private Integer pinCuenta;
     private Integer pinTransaccion;
     
-    public Cuenta(String titular, String tipoCuenta, long Id, double saldo, String Estado, Integer pincuenta, Integer pintransaccion) {
+    public Cuenta(String correo,String titular, String tipoCuenta, long Id, double saldo, String Estado, Integer pincuenta, Integer pintransaccion) {
+        this.correo=correo;
         this.Titular = titular;
         this.tipoCuenta = tipoCuenta;
         this.IDcuenta = Id;
@@ -26,6 +28,9 @@ public class Cuenta {
         this.estadoCuenta = Estado;
         this.pinCuenta = pincuenta;
         this.pinTransaccion = pintransaccion;
+    }
+    public String getcorreo(){
+        return this.correo;
     }
     public String gettitular(){
         return this.Titular;
@@ -63,7 +68,6 @@ public class Cuenta {
         return pinCuenta;
     }
 
-   
     public Integer getPinTransaccion() {
         return pinTransaccion;
     }
