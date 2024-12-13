@@ -13,6 +13,12 @@ public class Servicio {
     private String proveedorServicio;
     private String detalleServicio;
 
+    public Servicio(String nombreServicio, String proveedorServicio, String detalleServicio) {
+        this.nombreServicio = nombreServicio;
+        this.proveedorServicio = proveedorServicio;
+        this.detalleServicio = detalleServicio;
+    }
+
     public String getNombreServicio() {
         return nombreServicio;
     }

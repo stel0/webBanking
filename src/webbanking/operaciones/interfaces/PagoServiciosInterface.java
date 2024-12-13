@@ -4,11 +4,13 @@
  */
 package webbanking.operaciones.interfaces;
 
+import webbanking.Servicio;
+
 /**
  *
  * @author sotelo
  */
 public interface PagoServiciosInterface {
-    Boolean pagarServicios();
+    String[] pagarServicios();
     Boolean validarPinTransaccion();
 }
