@@ -22,7 +22,7 @@ public class GUIInicioSesion extends JFrame {
     JTextField Pin= new JTextField();
     JTextField Correo= new JTextField();
     JLabel error = new JLabel();
-    BaseDatos basedatos = new BaseDatos();
+    BaseDatos baseDatos = new BaseDatos();
     public GUIInicioSesion(){
         // TODO code application logic here
         
@@ -87,13 +87,13 @@ public class GUIInicioSesion extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try{
                     int pin = Integer.parseInt(Pin.getText()); 
-                    if(basedatos.validarInicio(pin, Correo.getText())){
+                    if(baseDatos.validarInicio(pin, Correo.getText())){
                         error.setText("Iniciando sesion");
                         error.setVisible(true);
-                        Cuenta cuenta=basedatos.getCuenta(pin, Correo.getText());
+                        Cuenta cuenta=baseDatos.getCuenta(pin, Correo.getText());
                         
                         dispose();
-                        GUIMenuPrincipal ventanaPrincipal = new GUIMenuPrincipal(cuenta);
+                        GUIMenuPrincipal ventanaPrincipal = new GUIMenuPrincipal(cuenta, baseDatos);
                         ventanaPrincipal.setVisible(true);
                         
                     }else{

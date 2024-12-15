@@ -12,9 +12,9 @@ import webbanking.operaciones.interfaces.DepositoInterface;
  * @author sotelo
  */
 public class Deposito extends Operacion implements DepositoInterface {
-    private double Deposito;
-    private long CDestino;
-    private BaseDatos Basedatos=new BaseDatos();
+    private final double Deposito;
+    private final long CDestino;
+    private final BaseDatos Basedatos=new BaseDatos();
     
     public Deposito(long IdCuenta,double deposito){
         this.Deposito=deposito;

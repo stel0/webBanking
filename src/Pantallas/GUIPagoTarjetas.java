@@ -20,7 +20,10 @@ import java.awt.event.*;
 import webbanking.BaseDatos;
 import webbanking.Cuenta;
 public class GUIPagoTarjetas extends JFrame  {
-    public  GUIPagoTarjetas(Cuenta cuenta) {
+    Cuenta cuenta;
+    BaseDatos baseDatos;
+    public  GUIPagoTarjetas(Cuenta cuenta, BaseDatos baseDatos) {
+        
         this.setTitle("Pago de Tarjetas de credito");
         this.setSize(500, 500);//tamaño de ventana
         this.setLocationRelativeTo(null);//centra la ventana en la pantalla
@@ -29,8 +32,9 @@ public class GUIPagoTarjetas extends JFrame  {
 
         public static void main(String[] args) {
             // TODO code application logic here
-            Cuenta cuentasesion= new Cuenta("","", "",0,0, "",0,0);
-            GUIPagoServicios Inicio=new GUIPagoServicios(cuentasesion);
+            BaseDatos baseDatos = new BaseDatos();
+            Cuenta cuenta= new Cuenta("","", "",0,0, "",0,0);
+            GUIPagoTarjetas Inicio = new GUIPagoTarjetas(cuenta, baseDatos);
             Inicio.setVisible(true);
         } 
 }
