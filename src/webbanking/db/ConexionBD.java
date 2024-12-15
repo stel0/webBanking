@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class ConexionBD {
     private static final String URL = "jdbc:mysql://localhost:3306/WebBanking";
     private static final String USUARIO = "root";
-    private static final String CONTRASENA = "a1994";
+    private static final String CONTRASENA = "Manualdelastoa123.";
 
     public static Connection conectar() throws SQLException {
         return DriverManager.getConnection(URL, USUARIO, CONTRASENA);

@@ -7,11 +7,11 @@ package Pantallas;
 import javax.swing.JFrame;
 import javax.swing.*;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.*;
 import webbanking.BaseDatos;
 import webbanking.Cuenta;
+import webbanking.db.Consultas;
 
 /**
  *
@@ -86,11 +86,12 @@ public class GUIInicioSesion extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    int pin = Integer.parseInt(Pin.getText()); 
-                    if(basedatos.validarInicio(pin, Correo.getText())){
+                    String pin = Pin.getText(); 
+                    String correo = Correo.getText();
+                    if(Consultas.verificarPinCuenta(correo,pin)){
                         error.setText("Iniciando sesion");
                         error.setVisible(true);
-                        Cuenta cuenta=basedatos.getCuenta(pin, Correo.getText());
+                        Cuenta cuenta= Consultas.obtenerDatos(correo,pin);
                         
                         dispose();
                         GUIMenuPrincipal ventanaPrincipal = new GUIMenuPrincipal(cuenta);

@@ -16,6 +16,7 @@ import javax.swing.*;
 
 public class GUIPinTransaccion extends JDialog{
     private boolean validez= false;
+    
     public GUIPinTransaccion(JFrame padre,String Titulo,Integer Pin){
     super(padre, Titulo, true); // Modal para bloquear interacción con el JFrame
     setSize(500,300);

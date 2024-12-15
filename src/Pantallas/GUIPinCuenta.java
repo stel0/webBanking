@@ -23,10 +23,10 @@ public class GUIPinCuenta extends JFrame {
     JTextField CPin= new JTextField();//caja de texto
     JLabel error = new JLabel();
     
-    JFrame Operacion;
+    JFrame operacion;
     public GUIPinCuenta (Integer Pin,JFrame operacion){
         this.pin=Pin;
-        this.Operacion=operacion;
+        this.operacion=operacion;
         this.setTitle("Validacion de pin");
         this.setSize(500, 500);//tamaño de ventana
         this.setLocationRelativeTo(null);//centra la ventana en la pantalla
@@ -85,7 +85,7 @@ public class GUIPinCuenta extends JFrame {
                 try{
                     int cpin = Integer.parseInt(CPin.getText()); 
                     if(pin.equals(cpin)){
-                        Operacion.setVisible(true);
+                        operacion.setVisible(true);
                         dispose();
                     }else{
                         error.setText("La contraseña es incorrecta, por favor vuelva a intentar.");
@@ -109,7 +109,6 @@ public class GUIPinCuenta extends JFrame {
         ActionListener Salir = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Operacion.dispose();
                 dispose();
             }  
         };

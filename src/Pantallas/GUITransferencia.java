@@ -4,8 +4,6 @@
  */
 package Pantallas;
 
-import javax.swing.JFrame;
-
 /**
  *
  * @author cabal
@@ -13,10 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JFrame;
 import javax.swing.*;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.*;
-import webbanking.BaseDatos;
 import webbanking.Cuenta;
 public class GUITransferencia extends JFrame  {
    JPanel panel=new JPanel();
@@ -61,9 +55,10 @@ public class GUITransferencia extends JFrame  {
             if (Dialogo.validarcontraseña()) {
                 //ACA TIENEN QUE PONER LA LOGICA DE LA ACCION QUE QUIEREN QUE REALICE SOBRE LA BASE DE DATOS
                 //COMO LAS QUE DEFINIMOS,DEPOSIITO,TRANSFERENCIA,ETC,ETC.
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo realizar la acción. Contraseña incorrecta.");
-            }
+                GUITransaccionFormulario tForm = new GUITransaccionFormulario(cuenta);
+                tForm.setVisible(true);
+                dispose();
+            } 
         });
         
     }
@@ -71,7 +66,7 @@ public class GUITransferencia extends JFrame  {
     
     public static void main(String[] args) {
         // TODO code application logic here
-        Cuenta cuentasesion= new Cuenta("","", "",0,0, "",0,0);
+        Cuenta cuenta=new Cuenta("","", "",0,0, "",0,0);
         GUITransferencia Inicio=new GUITransferencia(cuentasesion);
         Inicio.setVisible(true);
     } 

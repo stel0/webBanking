@@ -19,6 +19,8 @@ public class Cuenta {
     private Integer pinCuenta;
     private Integer pinTransaccion;
     
+    public Cuenta(){}
+    
     public Cuenta(String correo,String titular, String tipoCuenta, long Id, double saldo, String Estado, Integer pincuenta, Integer pintransaccion) {
         this.correo=correo;
         this.Titular = titular;
@@ -32,12 +34,25 @@ public class Cuenta {
     public String getcorreo(){
         return this.correo;
     }
+    
+    public void setCorreo(String correo){
+        this.correo = correo;
+    }
+    
     public String gettitular(){
         return this.Titular;
     }
     
-    public double getIDcuenta(){
+    public void setTitular(String nombre){
+        this.Titular = nombre;
+    }
+    
+    public long getIDcuenta(){
         return this.IDcuenta;
+    }
+    
+    public void setIDcuenta(long idCuenta){
+        this.IDcuenta = idCuenta;
     }
     
     public String getTipoCuenta() {
@@ -67,10 +82,19 @@ public class Cuenta {
     public Integer getPinCuenta() {
         return pinCuenta;
     }
+    
+    public void setPinCuenta(int pinCuenta){
+        this.pinCuenta = pinCuenta;
+    }
 
     public Integer getPinTransaccion() {
         return pinTransaccion;
     }
+    
+    public void setPinTransaccion(int pinTransaccion){
+        this.pinTransaccion = pinTransaccion;
+    }
+    
     public void aumentarSaldo(double dep){
         this.saldo=this.saldo + dep;
     }

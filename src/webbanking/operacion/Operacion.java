@@ -4,7 +4,14 @@
  */
 package webbanking.operacion;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import variablesGlobales.MensajesError;
+import variablesGlobales.MensajesExito;
 import webbanking.Cuenta;
+import webbanking.db.ConexionBD;
 
 /**
  *
@@ -12,12 +19,16 @@ import webbanking.Cuenta;
  */
 abstract public class Operacion {
     protected Cuenta cuenta;
-    protected Integer idCuentaDestino;
+    protected Cuenta cuentaDestino;
+    protected Long idCuentaDestino;
     protected String tipoTransaccion;
     protected Double monto;
     protected String fecha;
     protected String estadoOperacion;
     protected String detalles;
+    
+    //variables especial
+    protected String mensaje;
 
     public Cuenta getCuenta() {
         return cuenta;
@@ -27,11 +38,11 @@ abstract public class Operacion {
         this.cuenta = cuenta;
     }
 
-    public Integer getIdCuentaDestino() {
+    public Long getIdCuentaDestino() {
         return idCuentaDestino;
     }
 
-    public void setIdCuentaDestino(Integer idCuentaDestino) {
+    public void setIdCuentaDestino(Long idCuentaDestino) {
         this.idCuentaDestino = idCuentaDestino;
     }
 
@@ -75,5 +86,27 @@ abstract public class Operacion {
         this.detalles = detalles;
     }
     
-    
+    public boolean actualizarSaldo(int id_cuenta ,Double saldo) {
+        // primero actualizamos el saldo de la cuenta origen
+        String sql = "UPDATE Cuenta SET saldo = ?  WHERE id_cuenta = ?";
+        try (Connection conexion = ConexionBD.conectar(); PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            
+            // Configurar los parámetros de la consulta
+            stmt.setDouble(1, saldo);
+            stmt.setInt(2, id_cuenta);
+
+            int filasAfectadas = stmt.executeUpdate();
+            if (filasAfectadas > 0) {
+                System.out.println(MensajesExito.EXITO_ACTUALIZACION);
+                return true;
+            } else {
+                System.out.println(MensajesError.ERROR_CUENTA_NO_ENCONTRADA);
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println(MensajesError.ERROR_AL_ACTUALIZAR + e.getMessage());
+            return false;
+        }
+                
+    }
 }
