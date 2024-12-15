@@ -61,13 +61,24 @@ public class GUITransferencia extends JFrame  {
             } 
         });
         
+        JButton BVolver = new JButton("Volver al Menú Principal");
+        BVolver.setBounds(100, 300, 200, 50);
+        panel.add(BVolver);
+
+        BVolver.addActionListener(e -> {
+            GUIMenuPrincipal menuPrincipal = new GUIMenuPrincipal(cuenta);
+            menuPrincipal.setVisible(true);
+            dispose();
+        });
+        
+        
     }
     
     
     public static void main(String[] args) {
         // TODO code application logic here
         Cuenta cuenta=new Cuenta("","", "",0,0, "",0,0);
-        GUITransferencia Inicio=new GUITransferencia(cuentasesion);
+        GUITransferencia Inicio=new GUITransferencia(cuenta);
         Inicio.setVisible(true);
     } 
 }

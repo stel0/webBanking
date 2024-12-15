@@ -9,7 +9,9 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.*;
+import java.util.List;
 import webbanking.BaseDatos;
+import webbanking.Cliente;
 import webbanking.Cuenta;
 import webbanking.db.Consultas;
 
@@ -86,16 +88,20 @@ public class GUIInicioSesion extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    String pin = Pin.getText(); 
+                    String password = Pin.getText(); 
                     String correo = Correo.getText();
-                    if(Consultas.verificarPinCuenta(correo,pin)){
+                    int id_cliente = Consultas.verificarPinCuenta(correo,password);
+                    if(id_cliente != -1){
                         error.setText("Iniciando sesion");
                         error.setVisible(true);
-                        Cuenta cuenta= Consultas.obtenerDatos(correo,pin);
-                        
-                        dispose();
-                        GUIMenuPrincipal ventanaPrincipal = new GUIMenuPrincipal(cuenta);
-                        ventanaPrincipal.setVisible(true);
+                        List<Cuenta> cuentas= Consultas.obtenerDatos(correo,id_cliente);
+                        System.out.println("Cantidad de cuentas:"+cuentas.size());
+
+                        if(!cuentas.isEmpty()){
+                            GUISeleccionarCuenta seleccionarCuenta = new GUISeleccionarCuenta(cuentas);
+                            seleccionarCuenta.setVisible(true);
+                            dispose();
+                        }
                         
                     }else{
 

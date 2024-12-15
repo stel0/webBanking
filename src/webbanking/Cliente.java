@@ -12,7 +12,9 @@ import java.util.List;
  * @author sotelo
  */
 public class Cliente {
+    
     private List<Cuenta> cuentas;
+    
     public Cliente(){
         this.cuentas = new ArrayList<>();
     }

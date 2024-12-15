@@ -11,30 +11,32 @@ package webbanking.db;
  * @author HP
  */
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import webbanking.Cuenta;
 
 public class Consultas {
     
     // Método para verificar el PIN de la cuenta
-    static public boolean verificarPinCuenta(String correo, String pinIngresado)  {
-        String sql = "SELECT COUNT(*) FROM Cliente c JOIN Cuenta cu ON c.id_cliente = cu.id_cliente WHERE c.email = ? AND cu.pin_cuenta = ?;";
+    static public int verificarPinCuenta(String correo, String password)  {
+        String sql = "SELECT id_cliente FROM Cliente WHERE email = ? AND contrasena = ?;";
 
         try (Connection conexion = ConexionBD.conectar();
              PreparedStatement stmt = conexion.prepareStatement(sql)) {
 
             // Configurar los parámetros de la consulta
             stmt.setString(1, correo);
-            stmt.setString(2, pinIngresado);
+            stmt.setString(2, password);
 
             // Ejecutar la consulta
             ResultSet resultado = stmt.executeQuery();
             if (resultado.next() && resultado.getInt(1) > 0) {
-                return true; // PIN correcto
+                return resultado.getInt("id_cliente");
             }
         } catch (SQLException e) {
             System.err.println("Error al verificar el PIN de la cuenta: " + e.getMessage());
         }
-        return false; // PIN incorrecto o cuenta no encontrada
+        return -1; // PIN incorrecto o cuenta no encontrada
     }
 
     // Método para verificar el PIN de transacción
@@ -164,41 +166,78 @@ public class Consultas {
     return false; // La cuenta no existe o hubo un error
 }
     
-    static public Cuenta obtenerDatos(String correo,String pin_cuenta) {
-        String sql = 
-                "SELECT c.id_cliente, c.email,c.nombre, cu.id_cuenta, cu.saldo, cu.tipo_cuenta, cu.estado, cu.pin_transaccion\n" +
-                "FROM Cliente c\n" +
-                "JOIN Cuenta cu ON c.id_cliente = cu.id_cliente\n" +
-                "WHERE c.email = ? AND cu.pin_cuenta = ?;";
-        try (Connection conexion = ConexionBD.conectar(); PreparedStatement stmt = conexion.prepareStatement(sql)) {
+    static public List<Cuenta> obtenerDatos(String correo, int id_cliente) {
+    String sql = "SELECT c.id_cliente, c.email, c.nombre, cu.id_cuenta, cu.saldo, cu.tipo_cuenta, cu.estado, cu.pin_transaccion, cu.pin_cuenta "
+               + "FROM Cliente c "
+               + "JOIN Cuenta cu ON c.id_cliente = cu.id_cliente "
+               + "WHERE c.email = ? AND c.id_cliente = ?";
+    try (Connection conexion = ConexionBD.conectar(); PreparedStatement stmt = conexion.prepareStatement(sql)) {
 
-            // Configurar los parámetros de la consulta
-            stmt.setString(1, correo);
-            stmt.setString(2, pin_cuenta);
+        List<Cuenta> cuentas = new ArrayList<>();
+        // Configurar los parámetros de la consulta
+        stmt.setString(1, correo);  // Parámetro para el correo
+        stmt.setInt(2, id_cliente); // Parámetro para el id_cliente
 
-            // Ejecutar la consulta
-            ResultSet resultado = stmt.executeQuery();
-            
-            // Verificar si hay resultados
-            if (resultado.next()) {
-                // Crear un objeto Cuenta (o Cliente) con los datos obtenidos
-                Cuenta cuenta = new Cuenta();
-                cuenta.setCorreo(correo);
-                cuenta.setTitular(resultado.getString("nombre"));
-                cuenta.setTipoCuenta(resultado.getString("tipo_cuenta"));
-                cuenta.setIDcuenta(resultado.getInt("id_cuenta"));
-                cuenta.setSaldo(resultado.getDouble("saldo"));
-                cuenta.setEstadoCuenta(resultado.getString("estado"));
-                cuenta.setPinCuenta(Integer.parseInt(pin_cuenta));
-                cuenta.setPinTransaccion(resultado.getInt("pin_transaccion"));
-                
-                return cuenta; // Retorna el objeto Cuenta con los datos
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al obtener los datos del cliente: " + e.getMessage());
+        // Ejecutar la consulta
+        ResultSet resultado = stmt.executeQuery();
+        
+        // Verificar si hay resultados
+        while (resultado.next()) {
+            // Crear un objeto Cuenta con los datos obtenidos
+            Cuenta cuenta = new Cuenta();
+            cuenta.setCorreo(resultado.getString("email"));
+            cuenta.setTitular(resultado.getString("nombre"));
+            cuenta.setTipoCuenta(resultado.getString("tipo_cuenta"));
+            cuenta.setIDcuenta(resultado.getInt("id_cuenta"));
+            cuenta.setSaldo(resultado.getDouble("saldo"));
+            cuenta.setEstadoCuenta(resultado.getString("estado"));
+            cuenta.setPinCuenta(resultado.getInt("pin_cuenta"));
+            cuenta.setPinTransaccion(resultado.getInt("pin_transaccion"));
+
+            cuentas.add(cuenta);
         }
-        return null; // Retorna null si no se encuentran datos o hay un error
+        return cuentas;
+    } catch (SQLException e) {
+        System.err.println("Error al obtener los datos del cliente: " + e.getMessage());
     }
+    return null; // Retorna null si no se encuentran datos o hay un error
+}
+    
+    static public Cuenta obtenerCuenta(Long id_cuenta) {
+    String sql = "SELECT c.id_cliente, c.email, c.nombre, cu.id_cuenta, cu.saldo, cu.tipo_cuenta, cu.estado, cu.pin_transaccion, cu.pin_cuenta "
+               + "FROM Cliente c "
+               + "JOIN Cuenta cu ON c.id_cliente = cu.id_cliente "
+               + "WHERE cu.id_cuenta = ?";
+    try (Connection conexion = ConexionBD.conectar(); PreparedStatement stmt = conexion.prepareStatement(sql)) {
+
+        // Configurar el parámetro de la consulta
+        stmt.setInt(1, Integer.parseInt(Long.toString(id_cuenta)));  // Parámetro para el id_cuenta
+
+        // Ejecutar la consulta
+        ResultSet resultado = stmt.executeQuery();
+        
+        // Verificar si hay resultados
+        if (resultado.next()) {
+            // Crear un objeto Cuenta con los datos obtenidos
+            Cuenta cuenta = new Cuenta();
+            cuenta.setCorreo(resultado.getString("email"));
+            cuenta.setTitular(resultado.getString("nombre"));
+            cuenta.setTipoCuenta(resultado.getString("tipo_cuenta"));
+            cuenta.setIDcuenta(resultado.getInt("id_cuenta"));
+            cuenta.setSaldo(resultado.getDouble("saldo"));
+            cuenta.setEstadoCuenta(resultado.getString("estado"));
+            cuenta.setPinCuenta(resultado.getInt("pin_cuenta"));
+            cuenta.setPinTransaccion(resultado.getInt("pin_transaccion"));
+            
+            return cuenta;  // Devuelve la cuenta encontrada
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al obtener los datos del cliente: " + e.getMessage());
+    }
+    
+    return null; // Retorna null si no se encuentran datos o hay un error
+}
+
 
 //      public static void main(String[] args) {
 //        Consultas consultas = new Consultas();

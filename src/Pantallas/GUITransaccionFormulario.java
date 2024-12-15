@@ -4,12 +4,17 @@
  */
 package Pantallas;
 
+import java.time.format.DateTimeFormatter;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.plaf.OptionPaneUI;
 import variablesGlobales.MensajesError;
 import variablesGlobales.MensajesExito;
 import webbanking.Cuenta;
+import webbanking.db.Consultas;
 import webbanking.operaciones.Transferencia;
 
 /**
@@ -19,6 +24,7 @@ import webbanking.operaciones.Transferencia;
 public class GUITransaccionFormulario extends javax.swing.JFrame {
     JLabel error = new JLabel();
     private Cuenta cuenta;
+    private GUIMenuPrincipal ventanaPrincipal;
 
     /**
      * Creates new form GUITransaccionFormulario
@@ -159,11 +165,13 @@ public class GUITransaccionFormulario extends javax.swing.JFrame {
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
         // TODO add your handling code here:
         dispose();
+        this.ventanaPrincipal = new GUIMenuPrincipal(cuenta);
+        this.ventanaPrincipal.setVisible(true);
     }//GEN-LAST:event_CancelarActionPerformed
 
     private void AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarActionPerformed
         // TODO add your handling code here:
-        
+    
         try {
             String cuentaDestinoText = cuentaDestino.getText().trim();
             String montoText = monto.getText().trim();
@@ -182,6 +190,48 @@ public class GUITransaccionFormulario extends javax.swing.JFrame {
                 if (response.getMensaje() == null || response.getMensaje().isEmpty()) {
                     dispose();
                     JOptionPane.showMessageDialog(this, MensajesExito.EXITO_ACTUALIZACION);
+
+                    // Crear una nueva ventana para el ticket de transferencia
+                    JFrame ticketFrame = new JFrame("Ticket de Transferencia");
+                    ticketFrame.setSize(400, 300);
+                    ticketFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                    JTextArea ticketArea = new JTextArea();
+                    ticketArea.setEditable(false);
+
+                    // Generar contenido del ticket
+                    StringBuilder ticket = new StringBuilder();
+                    ticket.append(generarLinea(40)).append("\n");
+                    ticket.append("         Ticket de Transferencia         \n");
+                    ticket.append(generarLinea(40)).append("\n");
+                    ticket.append("Cuenta Origen: ").append(cuenta.getIDcuenta()).append("\n");
+                    ticket.append("Nombre Cuenta Origen: ").append(cuenta.gettitular()).append("\n"); // Nombre de la cuenta origen
+                    ticket.append("Cuenta Destino: ").append(cuentaDestinoID).append("\n");
+
+                    // Aquí deberías obtener el nombre de la cuenta destino
+                    // Para eso debes tener acceso a la cuenta destino, lo que puedes obtener de la base de datos o de un objeto similar a `cuenta`
+                    // Ejemplo:
+                    Cuenta cuentaDestino = Consultas.obtenerCuenta(cuentaDestinoID);  // Asegúrate de tener un método para obtener la cuenta destino
+                    if (cuentaDestino != null) {
+                        ticket.append("Nombre Cuenta Destino: ").append(cuentaDestino.gettitular()).append("\n");
+                    } else {
+                        ticket.append("Nombre Cuenta Destino: Desconocido\n");  // Si no encuentras la cuenta destino
+                    }
+
+                    ticket.append("Monto Transferido: ").append(String.format("%.2f", montoTransferencia)).append("\n");
+                    ticket.append("Fecha: ").append(java.time.LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE)).append("\n");
+                    ticket.append(generarLinea(40)).append("\n");
+
+                    ticketArea.setText(ticket.toString());
+
+                    JScrollPane scrollPane = new JScrollPane(ticketArea);
+                    ticketFrame.add(scrollPane);
+                    ticketFrame.setLocationRelativeTo(null); // Centra la ventana en la pantalla
+                    ticketFrame.setVisible(true);
+                    ticketFrame.setAlwaysOnTop(rootPaneCheckingEnabled);
+
+                    this.ventanaPrincipal = new GUIMenuPrincipal(cuenta);
+                    this.ventanaPrincipal.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(this, response.getMensaje());
                 }
@@ -194,6 +244,15 @@ public class GUITransaccionFormulario extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_AceptarActionPerformed
+
+    // Método auxiliar para generar líneas de caracteres
+private String generarLinea(int longitud) {
+    StringBuilder linea = new StringBuilder();
+    for (int i = 0; i < longitud; i++) {
+        linea.append("\u2500");
+    }
+    return linea.toString();
+}
 
     private boolean esNumeroValido(String input) {
         try {

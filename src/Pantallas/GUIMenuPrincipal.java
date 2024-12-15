@@ -91,7 +91,7 @@ public class GUIMenuPrincipal extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUIDeposito GDeposito= new GUIDeposito();
-                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GDeposito);
+                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GDeposito,cuenta);
                 PantallaValidacion.setVisible(true);
             }  
         };
@@ -108,8 +108,9 @@ public class GUIMenuPrincipal extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUITransferencia GTransferencia= new GUITransferencia(cuenta);//recibe la cuenta en la que inicio la sesion para revisar si la cuenta desde la que quiere tranferir es esa u otra del mismo titular
-                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GTransferencia);
+                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GTransferencia,cuenta);
                 PantallaValidacion.setVisible(true);
+                dispose();
             }    
         };
         BTransferencia.addActionListener(ValidarPin2);
@@ -126,7 +127,7 @@ public class GUIMenuPrincipal extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUIPagoServicios GPagoServicios= new GUIPagoServicios(cuenta);//recibe la cuenta en la que inicio la sesion para revisar si la cuenta desde la que quiere tranferir es esa u otra del mismo titular
-                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoServicios);
+                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoServicios,cuenta);
                 PantallaValidacion.setVisible(true);  
             }
         };
@@ -145,7 +146,7 @@ public class GUIMenuPrincipal extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUIPagoTarjetas GPagoTarjeta= new GUIPagoTarjetas(cuenta);//recibe la cuenta en la que inicio la sesion para revisar si la cuenta desde la que quiere tranferir es esa u otra del mismo titular
-                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoTarjeta);
+                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoTarjeta,cuenta);
                 PantallaValidacion.setVisible(true);      
             }
                 

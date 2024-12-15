@@ -22,14 +22,18 @@ public class GUIPinCuenta extends JFrame {
     JPanel panel=new JPanel();//creacion de panel
     JTextField CPin= new JTextField();//caja de texto
     JLabel error = new JLabel();
+    private Cuenta cuenta;
+    private GUIMenuPrincipal ventanaPrincipal;
+
     
     JFrame operacion;
-    public GUIPinCuenta (Integer Pin,JFrame operacion){
+    public GUIPinCuenta (Integer Pin,JFrame operacion,Cuenta cuenta){
         this.pin=Pin;
         this.operacion=operacion;
         this.setTitle("Validacion de pin");
         this.setSize(500, 500);//tamaño de ventana
         this.setLocationRelativeTo(null);//centra la ventana en la pantalla
+        this.cuenta = cuenta;
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         IniciarComponentes();
@@ -110,6 +114,8 @@ public class GUIPinCuenta extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                ventanaPrincipal = new GUIMenuPrincipal(cuenta);
+                ventanaPrincipal.setVisible(true);
             }  
         };
         BSalir.addActionListener(Salir);
@@ -128,7 +134,8 @@ public class GUIPinCuenta extends JFrame {
         // TODO code application logic here
         int Pin=0;
         JFrame ventana=new JFrame();
-        GUIPinCuenta pincuenta=new GUIPinCuenta(Pin,ventana);
+        Cuenta cuenta=new Cuenta("","", "",0,0, "",0,0);
+        GUIPinCuenta pincuenta=new GUIPinCuenta(Pin,ventana,cuenta);
         pincuenta.setVisible(true);
     }
 }
