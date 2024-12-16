@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import webbanking.BaseDatos;
 import webbanking.Cuenta;
+import webbanking.db.Consultas;
+import webbanking.operaciones.PagoServicios;
 
 /**
  *
@@ -20,16 +22,13 @@ import webbanking.Cuenta;
 public class GUIPagoServicios extends javax.swing.JFrame {
     
     Cuenta cuenta;
-    BaseDatos baseDatos;
-    GUIMenuPrincipal menuPrincipal;
+    String[] servicios;
     
-    public GUIPagoServicios(Cuenta cuenta, BaseDatos baseDatos, GUIMenuPrincipal menuPrincipal) {
+    public GUIPagoServicios(Cuenta cuenta) {
         this.cuenta = cuenta;
-        this.baseDatos = baseDatos;
-        this.menuPrincipal = menuPrincipal;
+        servicios = Consultas.obtenerServicios();
         initComponents();
         setTitle("Pago Servcios"); // Configura el título de la ventana
-        setSize(400, 400); // Establece el tamaño de la ventana
         setLocationRelativeTo(null); // Centra la ventana en la pantalla
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
     }
@@ -49,15 +48,17 @@ public class GUIPagoServicios extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Luz", "Agua", "Internet", "Teléfono" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(this.servicios));
         jComboBox1.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+            }
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
                 jComboBox1CaretPositionChanged(evt);
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
             }
         });
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -68,7 +69,7 @@ public class GUIPagoServicios extends javax.swing.JFrame {
 
         jLabel1.setText("Seleccione un servicio");
 
-        jLabel2.setText("Monto a pagar");
+        jLabel2.setText("Monto a pagar:");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -83,48 +84,57 @@ public class GUIPagoServicios extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Saldo de la cuenta:");
+
+        jTextField2.setEditable(false);
+        jTextField2.setText(Double.toString(cuenta.getSaldo()));
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(152, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(148, 148, 148))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox1, 0, 115, Short.MAX_VALUE)
-                            .addComponent(jTextField1)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(94, 94, 94)))
-                .addGap(34, 34, 34))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextField1)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(jLabel2))
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                .addGap(17, 17, 17)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
         );
 
         jComboBox1.getAccessibleContext().setAccessibleName("");
         jComboBox1.getAccessibleContext().setAccessibleDescription("");
-        jComboBox1.getAccessibleContext().setAccessibleParent(jComboBox1);
         jButton1.getAccessibleContext().setAccessibleName("J");
 
         pack();
@@ -152,50 +162,58 @@ public class GUIPagoServicios extends javax.swing.JFrame {
         } else {
             try {
                 double monto = Double.parseDouble(jTextField1.getText());
-                
-                new Thread(() -> {
-                    try {
-                        // Mostrar la ventana de verificación del PIN
-                        GUIPinTransaccion pinDialog = new GUIPinTransaccion(this, "Verificar PIN Transaccion", cuenta.getPinTransaccion());
-                        pinDialog.setVisible(true);
+                if(monto <= 0){
+                    JOptionPane.showMessageDialog(this, "El monto debe ser mayor a cero");
+                }else if(monto > cuenta.getSaldo()){
+                    JOptionPane.showMessageDialog(this, "El monto supera el saldo de la cuenta");
+                }else{
+                    new Thread(() -> {
+                        try {
+                            // Mostrar la ventana de verificación del PIN
+                            GUIPinTransaccion pinDialog = new GUIPinTransaccion(this, "Verificar PIN Transaccion", cuenta.getPinTransaccion());
+                            pinDialog.setVisible(true);
 
-                        if (pinDialog.validarcontraseña()) {
-                            String servicio = (String) jComboBox1.getSelectedItem();
-                            Thread.sleep(5000);
-                            realizarPago(monto, servicio);                
-                            if (menuPrincipal != null) {
-                                menuPrincipal.actualizarSaldo(cuenta.getSaldo());
+                            if (pinDialog.validarcontraseña()) {
+                                String servicio = (String) jComboBox1.getSelectedItem();
+                                Thread.sleep(1000);
+                                realizarPago(monto, servicio);
+                            } else {
+                                JOptionPane.showMessageDialog(this, "PIN incorrecto. Operación cancelada.");
                             }
-                        
-                        } else {
-                            JOptionPane.showMessageDialog(this, "PIN incorrecto. Operación cancelada.");
+                        } catch (Exception e) {
+                            System.err.println("El hilo fue interrumpido.");
                         }
-                    }catch(Exception e){
-                        System.err.println("El hilo fue interrumpido.");                     
-                    }
-                }).start();
-                
+                    }).start();
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(rootPane, "El monto debe ser un número válido");
             }
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
     
     
     private void realizarPago(double monto,String servicio) {
         try {
             long ID = (long) cuenta.getIDcuenta();
-            baseDatos.PagoServicios(ID, monto);
-            
-            String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-            String mensaje = "Operación realizada con éxito\n" +
-                             "Fecha: " + fecha + "\n" +
-                             "Cuenta: " + cuenta.getIDcuenta() + "\n" +
-                             "Descripción: Pago de servicio "+servicio +
-                             "\nMonto: " + monto;
-            JOptionPane.showMessageDialog(this, mensaje);
-            //dispose();
+//            baseDatos.PagoServicios(ID, monto);
+            PagoServicios pg = new PagoServicios(servicio,cuenta,monto);
+            if(pg.pagarServicios()){
+                String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+                String mensaje = "Operación realizada con éxito\n"
+                        + "Fecha: " + fecha + "\n"
+                        + "Cuenta: " + cuenta.getIDcuenta() + "\n"
+                        + "Descripción: Pago de servicio " + servicio
+                        + "\nMonto: " + monto;
+                JOptionPane.showMessageDialog(this, mensaje);
+                dispose();
+                GUIMenuPrincipal  mp = new GUIMenuPrincipal(cuenta);
+                mp.setVisible(true);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ocurrió un error al realizar el pago: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -204,10 +222,8 @@ public class GUIPagoServicios extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        BaseDatos baseDatos = new BaseDatos();
         Cuenta cuenta= new Cuenta("","", "",0,0, "",0,0);
-        GUIMenuPrincipal menuPrincipal = new GUIMenuPrincipal(cuenta,baseDatos);
-        GUIPagoServicios dep=new GUIPagoServicios(cuenta, baseDatos,menuPrincipal);
+        GUIPagoServicios dep=new GUIPagoServicios(cuenta);
         dep.setVisible(true);
     }
 
@@ -216,6 +232,8 @@ public class GUIPagoServicios extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.*;
 import variablesGlobales.MensajesExito;
+import webbanking.BaseDatos;
 import webbanking.Cuenta;
 import webbanking.db.Consultas;
 import webbanking.operaciones.PagoTarjeta;
@@ -32,9 +33,9 @@ public class GUIMenuPrincipal extends JFrame {
     //private final JLabel lblSaldo; // Para mostrar y actualizar el saldo dinámicamente
 
     
-    public GUIMenuPrincipal (Cuenta cuenta, BaseDatos baseDatos){ 
+    public GUIMenuPrincipal (Cuenta cuenta){ 
         this.cuenta=cuenta;
-        this.baseDatos = baseDatos;
+        this.baseDatos = new BaseDatos();
         this.setTitle("Menu");
         this.setSize(800, 700);//tamaño de ventana
         this.setLocationRelativeTo(null);//centra la ventana en la pantalla
@@ -90,10 +91,6 @@ public class GUIMenuPrincipal extends JFrame {
         panel.add(Saldo);   
     }
     
-    public void actualizarSaldo(double nuevoSaldo) {
-        Saldo.setText("Saldo actual: " + nuevoSaldo);
-        cuenta.setSaldo(nuevoSaldo);
-    }
     
     private void colocarBotones(){
         JButton BDeposito = new JButton("Depósito Cuenta");
@@ -101,10 +98,12 @@ public class GUIMenuPrincipal extends JFrame {
         panel.add(BDeposito);
 
         // Evento: Abrir GUIDeposito y validar el Pin de cuenta
-        ActionListener ValidarPin1 = new ActionListener() {
+        ActionListener ValidarPin1;
+        ValidarPin1 = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUIDeposito GDeposito= new GUIDeposito();
+                dispose();
+                GUIDeposito GDeposito= new GUIDeposito(cuenta);
                 GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GDeposito,cuenta);
                 PantallaValidacion.setVisible(true);
             }
@@ -139,8 +138,9 @@ public class GUIMenuPrincipal extends JFrame {
          ActionListener ValidarPin3= new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUIPagoServicios GPagoServicios= new GUIPagoServicios(cuenta,baseDatos,GUIMenuPrincipal.this);//recibe la cuenta en la que inicio la sesion para revisar si la cuenta desde la que quiere tranferir es esa u otra del mismo titular
-                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoServicios);
+                dispose();
+                GUIPagoServicios GPagoServicios= new GUIPagoServicios(cuenta);//recibe la cuenta en la que inicio la sesion para revisar si la cuenta desde la que quiere tranferir es esa u otra del mismo titular
+                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoServicios,cuenta);
                 PantallaValidacion.setVisible(true);  
             }
         };
@@ -202,9 +202,8 @@ public class GUIMenuPrincipal extends JFrame {
     
     public static void main(String[] args) {
         // TODO code application logic here
-        BaseDatos baseDatos = new BaseDatos();
         Cuenta cuenta=new Cuenta("","", "",0,0, "",0,0);
-        GUIMenuPrincipal Inicio=new GUIMenuPrincipal(cuenta,baseDatos);
+        GUIMenuPrincipal Inicio=new GUIMenuPrincipal(cuenta);
         Inicio.setVisible(true);
         
     }

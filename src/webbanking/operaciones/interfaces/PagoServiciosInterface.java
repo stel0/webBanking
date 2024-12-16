@@ -11,6 +11,6 @@ import webbanking.Servicio;
  * @author sotelo
  */
 public interface PagoServiciosInterface {
-    String[] pagarServicios();
+    Boolean pagarServicios();
     Boolean validarPinTransaccion();
 }

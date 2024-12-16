@@ -46,6 +46,15 @@ abstract public class Operacion {
         this.idCuentaDestino = idCuentaDestino;
     }
 
+    public Cuenta getCuentaDestino() {
+        return cuentaDestino;
+    }
+
+    public void setCuentaDestino(Cuenta cuentaDestino) {
+        this.cuentaDestino = cuentaDestino;
+    }
+    
+
     public String getTipoTransaccion() {
         return tipoTransaccion;
     }
@@ -85,5 +94,6 @@ abstract public class Operacion {
     public void setDetalles(String detalles) {
         this.detalles = detalles;
     }
+    
     
 }

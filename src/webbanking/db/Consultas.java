@@ -262,6 +262,30 @@ public class Consultas {
         }
         return null;
     }
+    
+    static public String[] obtenerServicios() {
+    String sql = "select * from Servicio;";
+    try (Connection conexion = ConexionBD.conectar(); PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        List<String> detallesServicios = new ArrayList<>();
+        
+        // Ejecutar la consulta
+        ResultSet resultado = stmt.executeQuery();
+        
+        // Iterar sobre todos los resultados
+        while (resultado.next()) {
+            // Obtener el valor de la columna "detalle_servicio" y añadirlo a la lista
+            detallesServicios.add(resultado.getString("detalle_servicio"));
+        }
+        
+        // Convertir la lista a un arreglo de String y retornarlo
+        return detallesServicios.toArray(new String[0]);
+    } catch (SQLException e) {
+        System.err.println("Error al obtener los datos del cliente: " + e.getMessage());
+    }
+
+    return null; // Retorna null si hay un error
+}
+
 
 //      public static void main(String[] args) {
 //        Consultas consultas = new Consultas();

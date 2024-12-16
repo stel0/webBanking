@@ -56,7 +56,7 @@ public class Transferencia extends Operacion implements TransferenciaInterface {
             // actualizamos cuenta destino
             cuentaDestino.aumentarSaldo(monto);
             // actualizamos cuenta origen
-            cuenta.desminuirSaldo(monto); 
+            cuenta.disminuirSaldo(monto); 
             return;
         }
         this.mensaje = "El monto es muy alto";

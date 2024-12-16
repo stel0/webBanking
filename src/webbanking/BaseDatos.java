@@ -58,27 +58,9 @@ public class BaseDatos {
 
     //DEPOSITO CUENTA//
     //realiza la opreacion depositocuenta que aumento el saldo de la cuenta destino en el monto introducido 
-    public Boolean Depositar(long CDestino, double Deposito) {
-        if (Deposito <= 0) {
-            throw new IllegalArgumentException("El depósito debe ser mayor a 0.");
-        }
-        Cuenta cuenta = getCuenta(CDestino);
-        System.out.println("Antes del deposito: " + cuenta.getSaldo() + " Titular: " + cuenta.gettitular() + " Nro. Cuenta: " + cuenta.getIDcuenta());
-        cuenta.aumentarSaldo(Deposito);
-        System.out.println("Despues del deposito: " + cuenta.getSaldo() + " Titular: " + cuenta.gettitular() + " Nro. Cuenta: " + cuenta.getIDcuenta());
-        return true;
-    }
     
-    public Boolean PagoServicios(long CDestino,double Pago){
-        if (Pago <= 0) {
-            throw new IllegalArgumentException("El depósito debe ser mayor a 0.");
-        }
-        Cuenta cuenta=getCuenta(CDestino);
-        System.out.println("Antes del pago: "+cuenta.getSaldo()+" Titular: "+cuenta.gettitular()+" Nro. Cuenta: "+ cuenta.getIDcuenta());
-        cuenta.disminuirSaldo(Pago);
-        System.out.println("Despues del pago: "+cuenta.getSaldo()+" Titular: "+cuenta.gettitular()+" Nro. Cuenta: "+ cuenta.getIDcuenta());
-        return true;
-    }
+    
+    
     
     //TRANSFERENCIA DE UNA CUENTA A OTRA//
     //valida los datos dados por el cliente para la transferencia, verificando si cumple

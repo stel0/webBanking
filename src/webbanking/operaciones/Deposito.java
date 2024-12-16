@@ -4,6 +4,8 @@
  */
 package webbanking.operaciones;
 import webbanking.BaseDatos;
+import webbanking.Cuenta;
+import webbanking.db.Consultas;
 import webbanking.operacion.Operacion;
 import webbanking.operaciones.interfaces.DepositoInterface;
 
@@ -12,13 +14,10 @@ import webbanking.operaciones.interfaces.DepositoInterface;
  * @author sotelo
  */
 public class Deposito extends Operacion implements DepositoInterface {
-    private final double Deposito;
-    private final long CDestino;
-    private final BaseDatos Basedatos=new BaseDatos();
+    private final double deposito;
     
-    public Deposito(long IdCuenta,double deposito){
-        this.Deposito=deposito;
-        this.CDestino=IdCuenta;
+    public Deposito(double deposito){
+        this.deposito=deposito;
     }
     
     private void setTransaccion(){
@@ -28,20 +27,16 @@ public class Deposito extends Operacion implements DepositoInterface {
     
     @Override
     //realiza la operacion de deposito en cuenta
-    public Boolean depositar(){ 
-        //retorna si el deposito se realizo
-        return(Basedatos.Depositar(CDestino,Deposito));
+    public Boolean depositar() {
+        if (deposito <= 0) {
+            throw new IllegalArgumentException("El depósito debe ser mayor a 0.");
+        }
+        try {
+            cuentaDestino.aumentarSaldo(deposito);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Ha ocurrido un error:"+e.getMessage());
+        }
+        return false;
     }
-    
-      /*
-    no es necesario, debido a que antes de depositar vos ya vas a estar dentro
-    de tu cuenta, lo que si se debera validar es el numero de cuenta a la que 
-    queres depositar para ver si existe dentro de la base de datos
-    
-    @Override
-    public Boolean validarPinCuenta() {
-        return true;
-    }
-    }*/
-    
 }

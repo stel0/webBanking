@@ -4,6 +4,7 @@
  */
 package Pantallas;
 
+import java.awt.Panel;
 import javax.swing.JOptionPane;
 import variablesGlobales.MensajesExito;
 import webbanking.Cuenta;
@@ -22,6 +23,7 @@ public class GUIPagoTarjetas extends javax.swing.JFrame {
      * Creates new form GUIPagoTarjetas
      */
     public GUIPagoTarjetas(Cuenta cuenta,PagoTarjeta pt) {
+        this.setLocationRelativeTo(null);//centra la ventana en la pantalla
         this.cuenta = cuenta;
         this.pt = pt;
         initComponents();
@@ -42,6 +44,8 @@ public class GUIPagoTarjetas extends javax.swing.JFrame {
         cantidadAbonar = new javax.swing.JTextField();
         Cancelar = new javax.swing.JButton();
         Abonar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,6 +76,11 @@ public class GUIPagoTarjetas extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Saldo cta:");
+
+        jTextField1.setEditable(false);
+        jTextField1.setText(Double.toString(cuenta.getSaldo()));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -79,6 +88,7 @@ public class GUIPagoTarjetas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(Cancelar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
@@ -86,13 +96,18 @@ public class GUIPagoTarjetas extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
                     .addComponent(deudaTotal)
-                    .addComponent(cantidadAbonar))
+                    .addComponent(cantidadAbonar)
+                    .addComponent(jTextField1))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(15, 15, 15)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deudaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -100,11 +115,11 @@ public class GUIPagoTarjetas extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cantidadAbonar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Cancelar)
                     .addComponent(Abonar))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
 
         pack();
@@ -132,7 +147,7 @@ public class GUIPagoTarjetas extends javax.swing.JFrame {
             }else{
                 if(pt.pagoTarjeta(abonar)){
                     JOptionPane.showMessageDialog(this, "El pago ha sido exitoso!");
-                    cuenta.desminuirSaldo(abonar);
+                    cuenta.disminuirSaldo(abonar);
                     dispose();
                     GUIMenuPrincipal menuPrincipal = new GUIMenuPrincipal(cuenta);
                     menuPrincipal.setVisible(true);
@@ -191,5 +206,7 @@ public class GUIPagoTarjetas extends javax.swing.JFrame {
     private javax.swing.JTextField deudaTotal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

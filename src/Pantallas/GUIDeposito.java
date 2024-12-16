@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import webbanking.Cuenta;
 import webbanking.BaseDatos;
+import webbanking.db.Consultas;
+import webbanking.operaciones.Deposito;
 
 /**
  *
@@ -19,13 +21,9 @@ import webbanking.BaseDatos;
 public class GUIDeposito extends javax.swing.JFrame {
     
     private final Cuenta cuenta;
-    private final BaseDatos baseDatos;
-    GUIMenuPrincipal menuPrincipal;
     
-    public GUIDeposito(Cuenta cuenta, BaseDatos baseDatos, GUIMenuPrincipal menuPrincipal) {
+    public GUIDeposito(Cuenta cuenta) {
         this.cuenta = cuenta;
-        this.baseDatos = baseDatos; 
-        this.menuPrincipal = menuPrincipal;
         
         initComponents(); // Inicializa los elementos gráficos
         setTitle("Depósito"); // Configura el título de la ventana
@@ -149,7 +147,7 @@ public class GUIDeposito extends javax.swing.JFrame {
                 // Intentar convertir el ID a un número
                 long ID = Long.parseLong(id);
 
-                Cuenta cuentaid = baseDatos.getCuenta(ID);
+                Cuenta cuentaid = Consultas.obtenerCuenta(ID) ;
 
                 if (cuentaid != null) {
                     JOptionPane.showMessageDialog(rootPane, "Cuenta encontrada: " + cuentaid.gettitular());
@@ -157,27 +155,36 @@ public class GUIDeposito extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(rootPane, "Introduzca el monto");
                     } else {
                         final String monto = jTextField1.getText();
+                        if(Integer.parseInt(monto ) <= 0 ){
+                            JOptionPane.showMessageDialog(rootPane, "El depósito debe ser mayor a 0");
+                        }else if(Double.parseDouble(monto ) > cuenta.getSaldo()){
+                            JOptionPane.showMessageDialog(rootPane, "El depósito no debe ser mayor que el su saldo");
+                        }else{
+                            try {
+                                // Intentar convertir el monto a un valor double
+                                double montoDouble = Double.parseDouble(monto);
 
-                        try {                          
-                            // Intentar convertir el monto a un valor double
-                            double montoDouble = Double.parseDouble(monto);
-                            
-                            Thread.sleep(5000); 
-                            baseDatos.Depositar(ID, montoDouble);
-                            String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-                            String mensaje = "Operación realizada con éxito\n" +
-                                "Fecha: " + fecha + "\n" +
-                                "Cuenta: " + cuentaid.getIDcuenta() + "\n" +
-                                "Descripción: Depósito\n" +
-                                "Monto: " + monto;
+                                Deposito dep = new Deposito(montoDouble);
+                                dep.setCuentaDestino(cuentaid); // cuenta destino
+                                Thread.sleep(1000);
+                                dep.depositar();
+                                String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+                                String mensaje = "Operación realizada con éxito\n"
+                                        + "Fecha: " + fecha + "\n"
+                                        + "Cuenta: " + cuentaid.getIDcuenta() + "\n"
+                                        + "Descripción: Depósito\n"
+                                        + "Monto: " + monto;
 
-                            JOptionPane.showMessageDialog(this, mensaje);
-                            if (menuPrincipal != null) {
-                                menuPrincipal.actualizarSaldo(cuentaid.getSaldo());
-                            }                        
-                            //dispose();
-                        } catch (NumberFormatException e) {
-                            JOptionPane.showMessageDialog(rootPane, "El monto debe ser un número válido");
+                                JOptionPane.showMessageDialog(this, mensaje);
+                                if(cuentaid.getIDcuenta() == cuenta.getIDcuenta()){
+                                    cuenta.setSaldo(cuentaid.getSaldo());
+                                }
+                                GUIMenuPrincipal mp = new GUIMenuPrincipal(cuenta);
+                                mp.setVisible(true);
+                                //dispose();
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(rootPane, "El monto debe ser un número válido");
+                            }
                         }
                     }
                 } else {
@@ -210,11 +217,9 @@ public class GUIDeposito extends javax.swing.JFrame {
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         
-        BaseDatos baseDatos = new BaseDatos();
         Cuenta cuenta= new Cuenta("","", "",0,0, "",0,0);
         
-        GUIMenuPrincipal menuPrincipal = new GUIMenuPrincipal(cuenta, baseDatos);
-        GUIDeposito dep=new GUIDeposito(cuenta,baseDatos,menuPrincipal);
+        GUIDeposito dep=new GUIDeposito(cuenta);
         dep.setVisible(true);
         
         //java.awt.EventQueue.invokeLater(new Runnable() {

@@ -25,12 +25,12 @@ public class WebBanking {
          
          //Instanciamos una nueva clase deposito para realizar el deposito del monto a la cuenta
          
-        Deposito Deposito1=new Deposito(6546548,500000);
-        if (Deposito1.depositar()) {
-            System.out.println("Depósito realizado con éxito.");
-        } else {
-            System.out.println("Depósito fallido.");
-        }
+//        Deposito Deposito1=new Deposito(6546548,500000);
+//        if (Deposito1.depositar()) {
+//            System.out.println("Depósito realizado con éxito.");
+//        } else {
+//            System.out.println("Depósito fallido.");
+//        }
         
         
         //Instancie otro deposito para que vean que la instanciacion dentro de la clase
@@ -40,13 +40,13 @@ public class WebBanking {
         //no la paso como parametro por el hecho de que vamos a trabajar con una base de datos en SQL y por lo que vi el metodo 
         //  modificara directamente la base de datos 
         
-       Deposito Deposito2=new Deposito(6546548,500000);
-        if (Deposito2.depositar()) {
-            System.out.println("Depósito realizado con éxito.");
-        } else {
-            System.out.println("Depósito fallido.");
-        }
-        
+//       Deposito Deposito2=new Deposito(6546548,500000);
+//        if (Deposito2.depositar()) {
+//            System.out.println("Depósito realizado con éxito.");
+//        } else {
+//            System.out.println("Depósito fallido.");
+//        }
+//        
         
         
         

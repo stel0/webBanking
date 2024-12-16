@@ -17,13 +17,13 @@ import webbanking.db.ConexionBD;
  * @author sotelo
  */
 public class Cuenta {
-    private final String correo;
-    private final String Titular;
+    private String correo;
+    private String Titular;
     private String tipoCuenta;
-    private final long  IDcuenta;// le agrege porque tiene que ser uno d elos atributos de la cuenta
+    private long  IDcuenta;// le agrege porque tiene que ser uno d elos atributos de la cuenta
     private double saldo;// modifique a double para que pueda usar el constructor porque si esta en Double no se puede modificar
     private String estadoCuenta;
-    private final Integer pinCuenta;
+    private Integer pinCuenta;
     private Integer pinTransaccion;
     
     public Cuenta(){}
@@ -76,6 +76,7 @@ public class Cuenta {
 
     public void setSaldo(Double saldo) {
         this.saldo = saldo;
+        actualizarSaldo();
     }
 
     public String getEstadoCuenta() {

@@ -7,6 +7,7 @@ package webbanking.operaciones;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import webbanking.Cuenta;
 
 import webbanking.Servicio;
 import webbanking.operacion.Operacion;
@@ -17,17 +18,19 @@ import webbanking.operaciones.interfaces.PagoServiciosInterface;
  * @author sotelo
  */
 public class PagoServicios extends Operacion implements PagoServiciosInterface {
-    private Servicio servicio;
+    private String servicio;
 
-    public PagoServicios(Servicio servicio) {
+    public PagoServicios(String servicio,Cuenta cuenta,Double monto) {
         this.servicio = servicio;
+        this.cuenta = cuenta;
+        this.monto = monto;
     }
 
-    public Servicio getServicio(){
+    public String getServicio(){
         return servicio;
     }
 
-    public void setServicio(Servicio servicio) {
+    public void setServicio(String servicio) {
         this.servicio = servicio;
     }
 
@@ -39,24 +42,16 @@ public class PagoServicios extends Operacion implements PagoServiciosInterface {
     }
 
     @Override
-    public String[] pagarServicios() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'pagarServicios'");
+    public Boolean pagarServicios() {
+        if (monto <= 0) {
+            throw new IllegalArgumentException("El depósito debe ser mayor a 0.");
+        }
+        try {
+            cuenta.disminuirSaldo(monto);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Ha ocurrido un error:" + e.getMessage());
+        }
+        return false;
     }
-
-    // @Override
-    // public void pagarServicios() {
-    // try {
-    // Servicio servicio = this.servicio;
-    // Servicio response = this.baseDeDatos.get(servicio.getNombreServicio());
-    // if (response.equals(null)) {
-    // System.out.println("Servicio no encontrado");
-    // } else {
-    // String[] resultado;
-    // }
-    // } catch (Exception e) {
-    // System.out.println("Error al obtener el servicio");
-    // }
-    // }
-      
 }
