@@ -124,7 +124,7 @@ public class GUIPinCuenta extends JFrame {
     
     
     private void colocarCajaTexto(){
-        CPin.setBounds(60, 140, 300, 20);
+        CPin.setBounds(60, 140, 300, 30);
         panel.add(CPin);
         
     }

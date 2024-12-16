@@ -34,7 +34,7 @@ public class GUIPinTransaccion extends JDialog{
     
     //caja de texto para la contraseña
     JTextField campoContrasena = new JTextField();
-    campoContrasena.setBounds(120, 50, 150, 20);
+    campoContrasena.setBounds(120, 50, 150, 30);
     add(campoContrasena);
     
     JButton botonAceptar = new JButton("Aceptar");

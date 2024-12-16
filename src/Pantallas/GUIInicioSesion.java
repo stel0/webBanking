@@ -122,10 +122,10 @@ public class GUIInicioSesion extends JFrame {
     
     private void colocarCajaTexto(){
 
-        Correo.setBounds(60, 50, 300, 20);
+        Correo.setBounds(60, 50, 300,30);
         panel.add(Correo);
        
-        Pin.setBounds(60, 100, 300, 20);
+        Pin.setBounds(60, 100, 300, 30);
         panel.add(Pin);
          
     }
