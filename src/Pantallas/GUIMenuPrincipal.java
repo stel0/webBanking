@@ -140,7 +140,7 @@ public class GUIMenuPrincipal extends JFrame {
         
         //
         
-        JButton BPagotarjeta= new JButton("Pagar Tarejetas de Credito");
+        JButton BPagotarjeta= new JButton("Pagar Tarjeta de Credito");
         BPagotarjeta.setBounds(400, 300, 200, 50);
         /*InicioSesion.setEnabled(true);*///habilitar o deshabilitar la interaccion con el boton
         panel.add(BPagotarjeta);

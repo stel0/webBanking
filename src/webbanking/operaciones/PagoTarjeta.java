@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package webbanking.operaciones;
 
 import java.sql.Connection;
@@ -17,7 +13,7 @@ import webbanking.operaciones.interfaces.PagoTarjetaInterface;
  *
  * @author sotelo
  */
-public class PagoTarjeta extends Operacion implements PagoTarjetaInterface{
+public class PagoTarjeta extends Operacion implements PagoTarjetaInterface {
     private String fechaVencimiento;
     private Integer limiteCredito;
     private Integer saldoDisponible;
@@ -28,8 +24,20 @@ public class PagoTarjeta extends Operacion implements PagoTarjetaInterface{
     @Override
     public Boolean pagoTarjeta(int monto) {
         this.saldoDisponible += monto;
-        return actualizarDeuda();
+        
+        // Crear un hilo para actualizar la deuda
+        Thread actualizarDeudaThread = new Thread(new ActualizarDeudaRunnable());
+        actualizarDeudaThread.start();
+        
+        try {
+            actualizarDeudaThread.join(); // Esperar a que termine el hilo (opcional)
+        } catch (InterruptedException e) {
+            System.err.println("Error al esperar la actualización de la deuda: " + e.getMessage());
+        }
+        
+        return true;
     }
+
     @Override
     public Boolean validarPinCuenta() {
         return true;
@@ -82,16 +90,14 @@ public class PagoTarjeta extends Operacion implements PagoTarjetaInterface{
     public void setIdTarjeta(Integer idTarjeta) {
         this.idTarjeta = idTarjeta;
     }
-   
+
     public boolean actualizarDeuda() {
-        // primero actualizamos el saldo de la cuenta origen
-        String sql = "UPDATE Tarjeta SET saldo_disponible = ?  WHERE id_tarjeta = ?";
+        String sql = "UPDATE Tarjeta SET saldo_disponible = ? WHERE id_tarjeta = ?";
         try (Connection conexion = ConexionBD.conectar(); PreparedStatement stmt = conexion.prepareStatement(sql)) {
-            
+
             // Configurar los parámetros de la consulta
             stmt.setInt(1, saldoDisponible);
-            
-            stmt.setInt(2,idTarjeta);
+            stmt.setInt(2, idTarjeta);
 
             int filasAfectadas = stmt.executeUpdate();
             if (filasAfectadas > 0) {
@@ -105,6 +111,16 @@ public class PagoTarjeta extends Operacion implements PagoTarjetaInterface{
             System.err.println(MensajesError.ERROR_AL_ACTUALIZAR + e.getMessage());
             return false;
         }
-                
+    }
+
+    // Clase interna para manejar la actualización en un hilo
+    private class ActualizarDeudaRunnable implements Runnable {
+        @Override
+        public void run() {
+            boolean exito = actualizarDeuda();
+            if (!exito) {
+                System.err.println("Error al actualizar la deuda en el hilo.");
+            }
+        }
     }
 }
