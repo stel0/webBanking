@@ -4,7 +4,14 @@
  */
 package webbanking.operacion;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import variablesGlobales.MensajesError;
+import variablesGlobales.MensajesExito;
 import webbanking.Cuenta;
+import webbanking.db.ConexionBD;
 
 /**
  *
@@ -12,12 +19,16 @@ import webbanking.Cuenta;
  */
 abstract public class Operacion {
     protected Cuenta cuenta;
-    protected Integer idCuentaDestino;
+    protected Cuenta cuentaDestino;
+    protected Long idCuentaDestino;
     protected String tipoTransaccion;
     protected Double monto;
     protected String fecha;
     protected String estadoOperacion;
     protected String detalles;
+    
+    //variables especial
+    protected String mensaje;
 
     public Cuenta getCuenta() {
         return cuenta;
@@ -27,13 +38,22 @@ abstract public class Operacion {
         this.cuenta = cuenta;
     }
 
-    public Integer getIdCuentaDestino() {
+    public Long getIdCuentaDestino() {
         return idCuentaDestino;
     }
 
-    public void setIdCuentaDestino(Integer idCuentaDestino) {
+    public void setIdCuentaDestino(Long idCuentaDestino) {
         this.idCuentaDestino = idCuentaDestino;
     }
+
+    public Cuenta getCuentaDestino() {
+        return cuentaDestino;
+    }
+
+    public void setCuentaDestino(Cuenta cuentaDestino) {
+        this.cuentaDestino = cuentaDestino;
+    }
+    
 
     public String getTipoTransaccion() {
         return tipoTransaccion;

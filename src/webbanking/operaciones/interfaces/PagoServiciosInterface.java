@@ -4,6 +4,8 @@
  */
 package webbanking.operaciones.interfaces;
 
+import webbanking.Servicio;
+
 /**
  *
  * @author sotelo
