@@ -144,46 +144,41 @@ public class GUIDeposito extends javax.swing.JFrame {
         } else {
             final String id = jTextField2.getText();
             
+            new Thread(() -> {
             try {
-            // Intentar convertir el ID a un número (long o int, según corresponda)
+                // Intentar convertir el ID a un número
                 long ID = Long.parseLong(id);
 
-                
                 Cuenta cuentaid = baseDatos.getCuenta(ID);
-                
+
                 if (cuentaid != null) {
                     JOptionPane.showMessageDialog(rootPane, "Cuenta encontrada: " + cuentaid.gettitular());
-                    if(jTextField1.getText().isEmpty()){
+                    if (jTextField1.getText().isEmpty()) {
                         JOptionPane.showMessageDialog(rootPane, "Introduzca el monto");
                     } else {
                         final String monto = jTextField1.getText();
 
-                        try {
-                        // Intentar convertir el monto a un valor double
-                        double montoDouble = Double.parseDouble(monto);
+                        try {                          
+                            // Intentar convertir el monto a un valor double
+                            double montoDouble = Double.parseDouble(monto);
+                            
+                            Thread.sleep(5000); 
+                            baseDatos.Depositar(ID, montoDouble);
+                            String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+                            String mensaje = "Operación realizada con éxito\n" +
+                                "Fecha: " + fecha + "\n" +
+                                "Cuenta: " + cuentaid.getIDcuenta() + "\n" +
+                                "Descripción: Depósito\n" +
+                                "Monto: " + monto;
 
-                        // Mostrar el monto si la conversión es exitosa
-                        //JOptionPane.showMessageDialog(rootPane, "Operacion realizada con exito\nSe ha depositado: " + montoDouble);
-
-                        baseDatos.Depositar(ID, montoDouble);
-                        String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-                        String mensaje = "Operación realizada con éxito\n" +
-                             "Fecha: " + fecha + "\n" +
-                             "Cuenta: " + cuentaid.getIDcuenta()+ "\n" +
-                             "Descripción: Depósito\n" +
-                             "Monto: " + monto;
-                        
-                        JOptionPane.showMessageDialog(this, mensaje);
-                        //GUIMenuPrincipal dep=new GUIMenuPrincipal(cuenta,baseDatos);
-                        //dep.setVisible(true);
-                        if (menuPrincipal != null) {
-                            menuPrincipal.actualizarSaldo(cuentaid.getSaldo());
-                        }                        
-                        dispose();
+                            JOptionPane.showMessageDialog(this, mensaje);
+                            if (menuPrincipal != null) {
+                                menuPrincipal.actualizarSaldo(cuentaid.getSaldo());
+                            }                        
+                            //dispose();
                         } catch (NumberFormatException e) {
-                            // Mostrar error si no es un número válido
                             JOptionPane.showMessageDialog(rootPane, "El monto debe ser un número válido");
-                            }
+                        }
                     }
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "No se encontró una cuenta con el ID especificado.");
@@ -191,7 +186,11 @@ public class GUIDeposito extends javax.swing.JFrame {
 
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(rootPane, "El ID debe ser un número válido.");
-            }    
+            } catch (InterruptedException e) {
+                System.err.println("El hilo fue interrumpido.");
+                Thread.currentThread().interrupt();
+            }
+        }).start();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
