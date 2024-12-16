@@ -22,24 +22,31 @@ import webbanking.db.Consultas;
 import webbanking.operaciones.PagoTarjeta;
 
 public class GUIMenuPrincipal extends JFrame {
-    private Cuenta cuenta;
+    Cuenta cuenta;
+    private BaseDatos baseDatos;
+    private JLabel Saldo;
+    
     JPanel panel=new JPanel();//creacion de panel
     JTextField Pin= new JTextField();
     JTextField Correo= new JTextField();
+    //private final JLabel lblSaldo; // Para mostrar y actualizar el saldo dinámicamente
+
     
-    public GUIMenuPrincipal (Cuenta cuenta){ 
+    public GUIMenuPrincipal (Cuenta cuenta, BaseDatos baseDatos){ 
         this.cuenta=cuenta;
-        // TODO code application logic here
+        this.baseDatos = baseDatos;
         this.setTitle("Menu");
         this.setSize(800, 700);//tamaño de ventana
         this.setLocationRelativeTo(null);//centra la ventana en la pantalla
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
+        //lblSaldo = new JLabel("Saldo disponible: " + cuenta.getSaldo());
+        
         IniciarComponentes();
         
     }
     
-    
+
     private void IniciarComponentes(){
         colocarPanel();
         colocarEtiquetas();
@@ -56,7 +63,8 @@ public class GUIMenuPrincipal extends JFrame {
         JLabel Saludo = new JLabel("Bienvenido, "+cuenta.gettitular()+" !");
         JLabel Idcuenta = new JLabel("Nro.Cuenta: "+ cuenta.getIDcuenta());
         JLabel SaldoT    = new JLabel("Saldo disponible:  ");
-        JLabel Saldo   = new JLabel(" "+cuenta.getSaldo());
+        Saldo   = new JLabel(" "+cuenta.getSaldo());
+        
         
         //seteamos sus posicion y tamaño
         //nombreetiqueta.bounds(x,y,ancho,alto)
@@ -82,25 +90,27 @@ public class GUIMenuPrincipal extends JFrame {
         panel.add(Saldo);   
     }
     
+    public void actualizarSaldo(double nuevoSaldo) {
+        Saldo.setText("Saldo actual: " + nuevoSaldo);
+        cuenta.setSaldo(nuevoSaldo);
+    }
+    
     private void colocarBotones(){
-        JButton BDeposito= new JButton("Deposito Cuenta");
+        JButton BDeposito = new JButton("Depósito Cuenta");
         BDeposito.setBounds(100, 200, 200, 50);
-        /*InicioSesion.setEnabled(true);*///habilitar o deshabilitar la interaccion con el boton
         panel.add(BDeposito);
-        
-        
-        //Evento: Abrir GUIDeposito y validar la Pin de cuenta
+
+        // Evento: Abrir GUIDeposito y validar el Pin de cuenta
         ActionListener ValidarPin1 = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUIDeposito GDeposito= new GUIDeposito();
                 GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GDeposito,cuenta);
                 PantallaValidacion.setVisible(true);
-            }  
+            }
         };
         BDeposito.addActionListener(ValidarPin1);
-        
-        //
+
         
         JButton BTransferencia= new JButton("Transferencia entre cuentas");
         BTransferencia.setBounds(400, 200, 200, 50);
@@ -129,8 +139,8 @@ public class GUIMenuPrincipal extends JFrame {
          ActionListener ValidarPin3= new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUIPagoServicios GPagoServicios= new GUIPagoServicios(cuenta);//recibe la cuenta en la que inicio la sesion para revisar si la cuenta desde la que quiere tranferir es esa u otra del mismo titular
-                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoServicios,cuenta);
+                GUIPagoServicios GPagoServicios= new GUIPagoServicios(cuenta,baseDatos,GUIMenuPrincipal.this);//recibe la cuenta en la que inicio la sesion para revisar si la cuenta desde la que quiere tranferir es esa u otra del mismo titular
+                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoServicios);
                 PantallaValidacion.setVisible(true);  
             }
         };
@@ -186,12 +196,16 @@ public class GUIMenuPrincipal extends JFrame {
         };
         BSalir.addActionListener(Salir);
 
-        //
+        
     }
+    
+    
     public static void main(String[] args) {
         // TODO code application logic here
+        BaseDatos baseDatos = new BaseDatos();
         Cuenta cuenta=new Cuenta("","", "",0,0, "",0,0);
-        GUIMenuPrincipal Inicio=new GUIMenuPrincipal(cuenta);
+        GUIMenuPrincipal Inicio=new GUIMenuPrincipal(cuenta,baseDatos);
         Inicio.setVisible(true);
+        
     }
 }

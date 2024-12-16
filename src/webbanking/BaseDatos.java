@@ -68,7 +68,18 @@ public class BaseDatos {
         System.out.println("Despues del deposito: " + cuenta.getSaldo() + " Titular: " + cuenta.gettitular() + " Nro. Cuenta: " + cuenta.getIDcuenta());
         return true;
     }
-
+    
+    public Boolean PagoServicios(long CDestino,double Pago){
+        if (Pago <= 0) {
+            throw new IllegalArgumentException("El depósito debe ser mayor a 0.");
+        }
+        Cuenta cuenta=getCuenta(CDestino);
+        System.out.println("Antes del pago: "+cuenta.getSaldo()+" Titular: "+cuenta.gettitular()+" Nro. Cuenta: "+ cuenta.getIDcuenta());
+        cuenta.disminuirSaldo(Pago);
+        System.out.println("Despues del pago: "+cuenta.getSaldo()+" Titular: "+cuenta.gettitular()+" Nro. Cuenta: "+ cuenta.getIDcuenta());
+        return true;
+    }
+    
     //TRANSFERENCIA DE UNA CUENTA A OTRA//
     //valida los datos dados por el cliente para la transferencia, verificando si cumple
     //con los requerimientos
@@ -92,7 +103,7 @@ public class BaseDatos {
     public void Transferir(long Destino, Cuenta Remitente, double Monto) {
         Cuenta CDestino = getCuenta(Destino);
         CDestino.aumentarSaldo(Monto);
-        Remitente.desminuirSaldo(Monto);
+        Remitente.disminuirSaldo(Monto);
     }
 
 }

@@ -24,7 +24,7 @@ public class GUIInicioSesion extends JFrame {
     JTextField Pin= new JTextField();
     JTextField Correo= new JTextField();
     JLabel error = new JLabel();
-    BaseDatos basedatos = new BaseDatos();
+    BaseDatos baseDatos = new BaseDatos();
     public GUIInicioSesion(){
         // TODO code application logic here
         
