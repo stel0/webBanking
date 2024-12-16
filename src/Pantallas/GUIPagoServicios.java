@@ -18,7 +18,7 @@ import webbanking.Cuenta;
  * @author User
  */
 public class GUIPagoServicios extends javax.swing.JFrame {
-
+    
     Cuenta cuenta;
     BaseDatos baseDatos;
     GUIMenuPrincipal menuPrincipal;
@@ -33,7 +33,8 @@ public class GUIPagoServicios extends javax.swing.JFrame {
         setLocationRelativeTo(null); // Centra la ventana en la pantalla
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
     }
-
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -151,19 +152,29 @@ public class GUIPagoServicios extends javax.swing.JFrame {
         } else {
             try {
                 double monto = Double.parseDouble(jTextField1.getText());
+                
+                new Thread(() -> {
+                    try {
+                        // Mostrar la ventana de verificación del PIN
+                        GUIPinTransaccion pinDialog = new GUIPinTransaccion(this, "Verificar PIN Transaccion", cuenta.getPinTransaccion());
+                        pinDialog.setVisible(true);
 
-                // Mostrar la ventana de verificación del PIN
-                GUIPinTransaccion pinDialog = new GUIPinTransaccion(this, "Verificar PIN Transaccion", cuenta.getPinTransaccion());
-                pinDialog.setVisible(true);
-
-                if (pinDialog.validarcontraseña()) {
-                    realizarPago(monto);
-                    if (menuPrincipal != null) {
-                        menuPrincipal.actualizarSaldo(cuenta.getSaldo());
-                    }   
-                } else {
-                    JOptionPane.showMessageDialog(this, "PIN incorrecto. Operación cancelada.");
-                }
+                        if (pinDialog.validarcontraseña()) {
+                            String servicio = (String) jComboBox1.getSelectedItem();
+                            Thread.sleep(5000);
+                            realizarPago(monto, servicio);                
+                            if (menuPrincipal != null) {
+                                menuPrincipal.actualizarSaldo(cuenta.getSaldo());
+                            }
+                        
+                        } else {
+                            JOptionPane.showMessageDialog(this, "PIN incorrecto. Operación cancelada.");
+                        }
+                    }catch(Exception e){
+                        System.err.println("El hilo fue interrumpido.");                     
+                    }
+                }).start();
+                
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(rootPane, "El monto debe ser un número válido");
             }
@@ -172,19 +183,19 @@ public class GUIPagoServicios extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     
     
-    private void realizarPago(double monto) {
+    private void realizarPago(double monto,String servicio) {
         try {
             long ID = (long) cuenta.getIDcuenta();
             baseDatos.PagoServicios(ID, monto);
-
+            
             String fecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
             String mensaje = "Operación realizada con éxito\n" +
                              "Fecha: " + fecha + "\n" +
                              "Cuenta: " + cuenta.getIDcuenta() + "\n" +
-                             "Descripción: Pago de servicio\n" +
-                             "Monto: " + monto;
+                             "Descripción: Pago de servicio "+servicio +
+                             "\nMonto: " + monto;
             JOptionPane.showMessageDialog(this, mensaje);
-            dispose();
+            //dispose();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Ocurrió un error al realizar el pago: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
