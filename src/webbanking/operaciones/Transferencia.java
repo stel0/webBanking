@@ -55,10 +55,8 @@ public class Transferencia extends Operacion implements TransferenciaInterface {
         if(cuenta.getSaldo() - monto > 0){
             // actualizamos cuenta destino
             cuentaDestino.aumentarSaldo(monto);
-            actualizarSaldo((int)cuentaDestino.getIDcuenta(), cuentaDestino.getSaldo()); 
             // actualizamos cuenta origen
             cuenta.desminuirSaldo(monto); 
-            actualizarSaldo((int)this.cuenta.getIDcuenta(),cuenta.getSaldo()); 
             return;
         }
         this.mensaje = "El monto es muy alto";

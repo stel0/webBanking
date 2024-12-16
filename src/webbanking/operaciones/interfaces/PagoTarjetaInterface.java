@@ -9,6 +9,6 @@ package webbanking.operaciones.interfaces;
  * @author sotelo
  */
 public interface PagoTarjetaInterface {
-    Boolean pagoTarjeta();
+    Boolean pagoTarjeta(int monto);
     Boolean validarPinCuenta();
 }

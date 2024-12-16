@@ -180,7 +180,13 @@ public class GUITransaccionFormulario extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, MensajesError.ERROR_FORMULARIO, "Error", JOptionPane.ERROR_MESSAGE);
             } else if (!esNumeroValido(cuentaDestinoText) || !esNumeroValido(montoText)) {
                 JOptionPane.showMessageDialog(this, MensajesError.ERROR_CAMPO_NUMERICO, "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
+            } else if(cuentaDestinoText.equals(Long.toString(cuenta.getIDcuenta()))){
+                JOptionPane.showMessageDialog(this, "La cuenta destino debe ser diferente a la cuenta origen", "Error", JOptionPane.ERROR_MESSAGE);
+            }else if(Double.parseDouble(montoText) > cuenta.getSaldo()){
+                JOptionPane.showMessageDialog(this, "El monto a transferir supera el saldo de la cuenta", "Error", JOptionPane.ERROR_MESSAGE);
+            }else if(Double.parseDouble(montoText) <= 0){
+                JOptionPane.showMessageDialog(this, "El monto a transferir debe ser mayor a cero", "Error", JOptionPane.ERROR_MESSAGE);
+            }else{
                 long cuentaDestinoID = Long.parseLong(cuentaDestinoText);
                 double montoTransferencia = Double.parseDouble(montoText);
 

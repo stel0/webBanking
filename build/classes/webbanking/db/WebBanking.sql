@@ -33,17 +33,17 @@ create table Servicio (
     );
     
 -- Tarjeta 
-create table Tarjeta (
-	id_tarjeta int auto_increment primary key,
-    id_cuenta int not null,
-    numero_tarjeta char(16) unique not null,
-    fecha_vencimiento date not null,
-    limite_credito int not null default 0,
-    saldo_disponible int not null,
-    deuda int not null default,
-    estado enum('activa','bloqueada') not null default 'activa',
-    foreign key (id_cuenta) references Cuenta(id_cuenta)
-    );
+CREATE TABLE Tarjeta (
+    id_tarjeta INT AUTO_INCREMENT PRIMARY KEY,
+    id_cuenta INT NOT NULL,
+    numero_tarjeta CHAR(16) UNIQUE NOT NULL,
+    fecha_vencimiento DATE NOT NULL,
+    limite_credito INT NOT NULL DEFAULT 0,
+    saldo_disponible INT NOT NULL,
+    estado ENUM('activa', 'bloqueada') NOT NULL DEFAULT 'activa',
+    FOREIGN KEY (id_cuenta) REFERENCES Cuenta(id_cuenta)
+);
+
     
 -- Tabla Operacion
 CREATE TABLE Operacion (
@@ -79,18 +79,11 @@ CREATE TABLE PagoTarjeta (
 );
 
 -- Prueba
-INSERT INTO Cliente (nombre, apellido, ci, telefono, direccion)
-VALUES ('Alejandra', 'Britos', '5087100', '0983448167', 'Calle Primavera 55');
 
-INSERT INTO Cuenta (id_cliente, tipo_cuenta, saldo, fecha_apertura, estado, pin_cuenta, pin_transaccion)
-VALUES (1, 'ahorro', 1500000, '2024-01-01', 'activa', '8765', '1234');
 
-INSERT INTO Cuenta (id_cliente, tipo_cuenta, saldo, fecha_apertura, estado, pin_cuenta, pin_transaccion)
-VALUES (1, 'ahorro', 0, '2024-01-20', 'activa', '9876', '2345');
-
-select * from cliente;
-select * from cuenta;
-select * from tarjeta;
+select * from Cliente;
+select * from Cuenta;
+select * from Tarjeta;
 
 SELECT c.id_cliente, c.nombre, cu.id_cuenta, cu.tipo_cuenta, cu.saldo
 FROM Cliente c
@@ -99,4 +92,54 @@ WHERE c.id_cliente = 1;
 
 alter table Tarjeta
 add column deuda INT AS (limite_credito - saldo_disponible);
+
+ALTER TABLE Cliente
+ADD COLUMN email VARCHAR(100) NOT NULL UNIQUE,
+ADD COLUMN contrasena CHAR(60) NOT NULL;
+
+
+INSERT INTO Cliente (nombre, apellido, ci, telefono, direccion,email,contrasena)
+VALUES ('Alejandra', 'Britos', '5087100', '0983448167', 'Calle Primavera 55','alejandra.britos@gmail.com', 'contra123');
+
+INSERT INTO Cuenta (id_cliente, tipo_cuenta, saldo, fecha_apertura, estado, pin_cuenta, pin_transaccion)
+VALUES (1, 'ahorro', 1500000, '2024-01-01', 'activa', '8765', '1234');
+
+INSERT INTO Cuenta (id_cliente, tipo_cuenta, saldo, fecha_apertura, estado, pin_cuenta, pin_transaccion)
+VALUES (1, 'ahorro', 0, '2024-01-20', 'activa', '9876', '2345');
+
+-- Insertar primer cliente
+INSERT INTO Cliente (nombre, apellido, ci, telefono, direccion, email, contrasena)
+VALUES ('Carlos', 'González', '7030100', '0976123456', 'Calle Central 123', 'carlos.gonzalez@gmail.com', 'contra123');
+
+-- Insertar segundo cliente
+INSERT INTO Cliente (nombre, apellido, ci, telefono, direccion, email, contrasena)
+VALUES ('María', 'Fernández', '8030200', '0987654321', 'Avenida Libertad 45', 'maria.fernandez@gmail.com', 'contra321');
+
+-- Cuentas del primer cliente (Carlos González)
+INSERT INTO Cuenta (id_cliente, tipo_cuenta, saldo, fecha_apertura, estado, pin_cuenta, pin_transaccion)
+VALUES (2, 'ahorro', 500000, '2024-02-01', 'activa', '5678', '4321');
+
+INSERT INTO Cuenta (id_cliente, tipo_cuenta, saldo, fecha_apertura, estado, pin_cuenta, pin_transaccion)
+VALUES (2, 'corriente', 1000000, '2024-02-15', 'activa', '6789', '5432');
+
+-- Cuenta del segundo cliente (María Fernández)
+INSERT INTO Cuenta (id_cliente, tipo_cuenta, saldo, fecha_apertura, estado, pin_cuenta, pin_transaccion)
+VALUES (3, 'ahorro', 300000, '2024-03-01', 'activa', '7890', '6543');
+
+
+INSERT INTO Tarjeta (id_cuenta, numero_tarjeta, fecha_vencimiento, limite_credito, saldo_disponible, estado)
+VALUES (2, '1234567812345678', '2026-12-31', 2000000, 2000000, 'activa');
+
+INSERT INTO Tarjeta (id_cuenta, numero_tarjeta, fecha_vencimiento, limite_credito, saldo_disponible, estado)
+VALUES (1, '8765432187654321', '2027-05-31', 3000000, 1000000, 'activa');
+
+INSERT INTO Servicio (nombre_servicio, proveedor_servicio, detalle_servicio)
+VALUES 
+('Electricidad', 'Proveedor Nacional de Energía', 'Pago de facturas de electricidad'),
+('Agua Potable', 'Servicio Municipal de Agua', 'Pago de facturas de agua potable'),
+('Internet', 'Proveedor de Internet X', 'Pago mensual de servicio de internet'),
+('Telefonía Móvil', 'Proveedor de Telefonía Y', 'Recarga de saldo y pago de facturas móviles'),
+('Gas Domiciliario', 'Proveedor Nacional de Gas', 'Pago de suministro de gas para el hogar'),
+('Televisión por Cable', 'Cable X', 'Pago mensual del servicio de televisión por cable');
+
 

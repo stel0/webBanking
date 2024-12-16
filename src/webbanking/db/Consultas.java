@@ -14,6 +14,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import webbanking.Cuenta;
+import webbanking.operaciones.PagoTarjeta;
 
 public class Consultas {
     
@@ -237,7 +238,30 @@ public class Consultas {
     
     return null; // Retorna null si no se encuentran datos o hay un error
 }
-
+    
+    static public PagoTarjeta deudaTarjeta(Long id_cuenta){
+        String sql = "SELECT deuda,limite_credito,saldo_disponible,id_tarjeta FROM Tarjeta WHERE id_cuenta = ?";
+        try (Connection conexion = ConexionBD.conectar();
+             PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            System.out.println("id_cuenta:"+id_cuenta);
+            // Configurar los parámetros de la consulta
+            stmt.setInt(1, Integer.parseInt(Long.toString(id_cuenta)));
+            // Ejecutar la consulta
+            ResultSet resultado = stmt.executeQuery();
+            if (resultado.next()) {
+                PagoTarjeta response = new PagoTarjeta();
+                response.setDeuda(resultado.getInt("deuda"));
+                response.setLimiteCredito(resultado.getInt("limite_credito"));
+                response.setSaldoDisponible(resultado.getInt("saldo_disponible"));
+                response.setIdTarjeta(resultado.getInt("id_tarjeta"));
+                
+                return response;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al verificar el PIN de transacción: " + e.getMessage());
+        }
+        return null;
+    }
 
 //      public static void main(String[] args) {
 //        Consultas consultas = new Consultas();

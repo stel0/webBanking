@@ -16,7 +16,10 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.*;
+import variablesGlobales.MensajesExito;
 import webbanking.Cuenta;
+import webbanking.db.Consultas;
+import webbanking.operaciones.PagoTarjeta;
 
 public class GUIMenuPrincipal extends JFrame {
     private Cuenta cuenta;
@@ -145,9 +148,19 @@ public class GUIMenuPrincipal extends JFrame {
          ActionListener ValidarPin4= new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GUIPagoTarjetas GPagoTarjeta= new GUIPagoTarjetas(cuenta);//recibe la cuenta en la que inicio la sesion para revisar si la cuenta desde la que quiere tranferir es esa u otra del mismo titular
-                GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoTarjeta,cuenta);
-                PantallaValidacion.setVisible(true);      
+                PagoTarjeta pt = Consultas.deudaTarjeta(cuenta.getIDcuenta());
+                if(pt != null){
+                    if(pt.getDeuda() != 0){
+                        GUIPagoTarjetas GPagoTarjeta= new GUIPagoTarjetas(cuenta,pt);
+                        GUIPinCuenta PantallaValidacion = new GUIPinCuenta(cuenta.getPinCuenta(),GPagoTarjeta,cuenta);
+                        PantallaValidacion.setVisible(true);  
+                        dispose();
+                    }else{
+                        JOptionPane.showMessageDialog(rootPane, "Por el momento no tienes deuda");
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "No posees una tarjeta");
+                }
             }
                 
         };
